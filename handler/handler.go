@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
@@ -64,7 +67,23 @@ func GetHome(c echo.Context) (err error) {
 
 func GetTmpFile(c echo.Context) (err error) {
 
-	return c.Attachment("/tmp/9472cc2f-5f5b-42c7-ae1b-f41f54661a72.jpg", "adad.jpg")
+	var files []string
+
+	root := "/tmp"
+	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if strings.Split(info.Name(), ".")[len(strings.Split(info.Name(), "."))-1] == "jpg" {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		fmt.Println(file)
+	}
+
+	return c.Attachment(files[0], "adad.jpg")
 }
 
 func GetHealth(c echo.Context) (err error) {
