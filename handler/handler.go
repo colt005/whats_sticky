@@ -20,7 +20,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	fmt.Println(formChallenge)
 	fmt.Println("Post Form Challenge")
 	fmt.Println(postFormChallenge)
-
+	fmt.Println(c.Request().Body)
 	fmt.Println(c.Request().Header)
 	err = json.NewDecoder(c.Request().Body).Decode(&json_map)
 	if err != nil {
