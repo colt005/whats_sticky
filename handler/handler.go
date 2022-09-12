@@ -8,7 +8,6 @@ import (
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/labstack/echo/v4"
-	"gorm.io/gorm/logger"
 )
 
 func HandleWhatsAppWebhookVerify(c echo.Context) (err error) {
@@ -45,7 +44,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	bodyBytes, err := io.ReadAll(c.Request().Body)
 	if err != nil {
-		logger.Error(err)
+		fmt.Println(err)
 	}
 
 	fmt.Println(string(bodyBytes))
