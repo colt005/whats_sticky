@@ -62,6 +62,11 @@ func GetHome(c echo.Context) (err error) {
 	return c.String(http.StatusOK, "Simple WhatsApp Webhook tester</br>There is no front-end, see server.js for implementation!")
 }
 
+func GetTmpFile(c echo.Context) (err error) {
+
+	return c.Attachment("/tmp/9472cc2f-5f5b-42c7-ae1b-f41f54661a72.jpg", "adad.jpg")
+}
+
 func GetHealth(c echo.Context) (err error) {
 
 	return c.JSON(http.StatusOK, echo.Map{
