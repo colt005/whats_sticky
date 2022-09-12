@@ -57,3 +57,18 @@ type Metadata struct {
 	DisplayPhoneNumber string `json:"display_phone_number"`
 	PhoneNumberID      string `json:"phone_number_id"`
 }
+
+func UnmarshalMediaResponse(data []byte) (MediaResponse, error) {
+	var r MediaResponse
+	err := json.Unmarshal(data, &r)
+	return r, err
+}
+
+type MediaResponse struct {
+	URL              string `json:"url"`
+	MIMEType         string `json:"mime_type"`
+	Sha256           string `json:"sha256"`
+	FileSize         int64  `json:"file_size"`
+	ID               string `json:"id"`
+	MessagingProduct string `json:"messaging_product"`
+}

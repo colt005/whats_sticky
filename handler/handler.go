@@ -47,8 +47,13 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		fmt.Println(err)
 	}
 
-	waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+	mediaResponse, err := waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
 
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	waclient.DownloadMedia(*mediaResponse)
 	return c.String(http.StatusOK, headerChallenge)
 }
 

@@ -1,38 +1,26 @@
 package waclient
 
 import (
-	"fmt"
-	"io"
 	"net/http"
+
+	"github.com/colt005/whats_sticky/config"
 )
 
 var httpClient *HTTPClient
 
-func init() {
-	httpClient = NewClient()
+//Do dispatches the HTTP request to the network
+func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
+	req.Header.Add("Authorization", "Bearer "+config.Config("BEARER_TOKEN"))
+	resp, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
-func GetMediaUrl(mediaId string) {
-	req, err := http.NewRequest("GET", "https://graph.facebook.com/v13.0/"+mediaId, nil)
-
-	if err != nil {
-		fmt.Println(err)
+func NewClient() *HTTPClient {
+	return &HTTPClient{
+		client: &http.Client{},
 	}
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	defer resp.Body.Close()
-
-	bodyBytes, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	fmt.Println(string(bodyBytes))
 }
-
-
