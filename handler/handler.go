@@ -18,7 +18,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	fmt.Println(json_map)
 
-	return
+	return c.NoContent(200)
 }
 
 func GetHealth(c echo.Context) (err error) {
