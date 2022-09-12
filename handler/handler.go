@@ -32,15 +32,8 @@ func HandleWhatsAppWebhookVerify(c echo.Context) (err error) {
 
 func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
-	json_map := make(map[string]interface{})
 	headerChallenge := c.QueryParams().Get("hub.challenge")
 
-	err = json.NewDecoder(c.Request().Body).Decode(&json_map)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println(json_map)
 
 	bodyBytes, err := io.ReadAll(c.Request().Body)
 	if err != nil {
