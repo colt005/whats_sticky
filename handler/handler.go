@@ -5,8 +5,29 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/colt005/whats_sticky/config"
 	"github.com/labstack/echo/v4"
 )
+
+func HandleWhatsAppWebhookVerify(c echo.Context) (err error) {
+
+	json_map := make(map[string]interface{})
+	headerChallenge := c.QueryParams().Get("hub.challenge")
+	verifyToken := c.QueryParams().Get("hub.verify_token")
+
+	err = json.NewDecoder(c.Request().Body).Decode(&json_map)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(json_map)
+
+	if verifyToken == config.Config("VERIFY_TOKEN") {
+		return c.String(http.StatusOK, headerChallenge)
+	} else {
+		return c.String(http.StatusUnauthorized, "lol nice try")
+	}
+}
 
 func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
