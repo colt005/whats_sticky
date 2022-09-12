@@ -11,18 +11,8 @@ import (
 func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	json_map := make(map[string]interface{})
-	headerChallenge := c.Request().Header.Get("hub.challenge")
-	formChallenge := c.Request().Form.Get("hub.challenge")
-	postFormChallenge := c.Request().PostForm.Get("hub.challenge")
-	fmt.Println("Header Challenge")
-	fmt.Println(headerChallenge)
-	fmt.Println("Form Challenge")
-	fmt.Println(formChallenge)
-	fmt.Println("Post Form Challenge")
-	fmt.Println(postFormChallenge)
-	fmt.Println(c.Request().Body)
-	fmt.Println(c.Request().Header)
-	fmt.Println(c.QueryParams())
+	headerChallenge := c.QueryParams().Get("hub.challenge")
+
 	err = json.NewDecoder(c.Request().Body).Decode(&json_map)
 	if err != nil {
 		fmt.Println(err)
@@ -30,7 +20,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	fmt.Println(json_map)
 
-	return c.String(http.StatusOK, "hellotoken")
+	return c.String(http.StatusOK, headerChallenge)
 }
 
 func GetHome(c echo.Context) (err error) {
