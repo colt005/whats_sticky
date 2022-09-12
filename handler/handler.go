@@ -7,6 +7,8 @@ import (
 	"net/http"
 
 	"github.com/colt005/whats_sticky/config"
+	"github.com/colt005/whats_sticky/models"
+	"github.com/colt005/whats_sticky/waclient"
 	"github.com/labstack/echo/v4"
 )
 
@@ -34,13 +36,18 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	headerChallenge := c.QueryParams().Get("hub.challenge")
 
-
 	bodyBytes, err := io.ReadAll(c.Request().Body)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(string(bodyBytes))
+	messageResponse, err := models.UnmarshalMessageResponse(bodyBytes)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
 
 	return c.String(http.StatusOK, headerChallenge)
 }
