@@ -6,6 +6,7 @@ import (
 )
 
 func SetupRoutes(app *echo.Echo) {
+	app.GET("/",handler.GetHome)
 	app.GET("/health",handler.GetHealth)
 	app.POST("/webhook", handler.HandleWhatsAppWebhook)
 }

@@ -21,6 +21,11 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	return c.NoContent(200)
 }
 
+func GetHome(c echo.Context) (err error) {
+
+	return c.String(http.StatusOK, "Simple WhatsApp Webhook tester</br>There is no front-end, see server.js for implementation!")
+}
+
 func GetHealth(c echo.Context) (err error) {
 
 	return c.JSON(http.StatusOK, echo.Map{
