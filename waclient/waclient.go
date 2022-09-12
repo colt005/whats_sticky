@@ -12,8 +12,8 @@ type HTTPClient struct {
 
 //Do dispatches the HTTP request to the network
 func (c *HTTPClient) Do(req *http.Request) (*http.Response, error) {
+	req.Header.Add("Authorization", "Bearer "+config.Config("BEARER_TOKEN"))
 	resp, err := c.client.Do(req)
-	resp.Header.Add("Authorization", "Bearer "+config.Config("BEARER_TOKEN"))
 	if err != nil {
 		return nil, err
 	}
