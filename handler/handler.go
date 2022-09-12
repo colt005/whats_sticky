@@ -11,6 +11,17 @@ import (
 func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	json_map := make(map[string]interface{})
+	headerChallenge := c.Request().Header.Get("hub.challenge")
+	formChallenge := c.Request().Form.Get("hub.challenge")
+	postFormChallenge := c.Request().PostForm.Get("hub.challenge")
+	fmt.Println("Header Challenge")
+	fmt.Println(headerChallenge)
+	fmt.Println("Form Challenge")
+	fmt.Println(formChallenge)
+	fmt.Println("Post Form Challenge")
+	fmt.Println(postFormChallenge)
+
+	fmt.Println(c.Request().Header)
 	err = json.NewDecoder(c.Request().Body).Decode(&json_map)
 	if err != nil {
 		fmt.Println(err)
