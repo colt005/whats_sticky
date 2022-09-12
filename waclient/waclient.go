@@ -73,26 +73,29 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	if resp.StatusCode == http.StatusOK {
 
-	fName := uuid.New().String()
-	fileName := fName + getFileExtension(mediaResponse.MIMEType)
-	tmpPath := filepath.Join("/tmp", fileName)
-	if getFileExtension(mediaResponse.MIMEType) == "" {
-		fmt.Println("Failed to get file extension")
-		return
-	}
-	newFile, err := os.Create(tmpPath)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+		fName := uuid.New().String()
+		fileName := fName + getFileExtension(mediaResponse.MIMEType)
+		tmpPath := filepath.Join("/tmp", fileName)
+		if getFileExtension(mediaResponse.MIMEType) == "" {
+			fmt.Println("Failed to get file extension")
+			return
+		}
+		newFile, err := os.Create(tmpPath)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 
-	defer newFile.Close()
+		defer newFile.Close()
 
-	if _, err = newFile.Write(bodyBytes); err != nil {
-		fmt.Println(err.Error())
-		return
+		if _, err = newFile.Write(bodyBytes); err != nil {
+			fmt.Println(err.Error())
+		}
+		fmt.Println(newFile.Name())
+	} else {
+		fmt.Println(string(bodyBytes))
 	}
-	fmt.Println(newFile.Name())
 
 	return
 }
