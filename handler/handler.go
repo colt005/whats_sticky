@@ -18,7 +18,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	fmt.Println(json_map)
 
-	return c.NoContent(200)
+	return c.String(http.StatusOK, "hellotoken")
 }
 
 func GetHome(c echo.Context) (err error) {
