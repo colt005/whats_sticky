@@ -44,6 +44,7 @@ func GetSticker(localPath string) (localFilePath string) {
 	file, err := os.Open(localPath)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	defer file.Close()
 
