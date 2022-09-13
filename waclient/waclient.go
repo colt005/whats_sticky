@@ -2,7 +2,6 @@ package waclient
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -138,15 +137,17 @@ func UploadSticker(webpPath string) (mediaId string, err error) {
 		fmt.Println(err)
 	}
 
-	var result map[string]string
+	fmt.Println(string(b))
 
-	err = json.Unmarshal(b, &result)
+	// var result map[string]string
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	// err = json.Unmarshal(b, &result)
 
-	fmt.Println(result["id"])
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// fmt.Println(result["id"])
 
 	return
 }
