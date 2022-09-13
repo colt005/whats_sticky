@@ -93,6 +93,7 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 			fmt.Println(err.Error())
 		}
 		fmt.Println(newFile.Name())
+		localPath = tmpPath
 	} else {
 		fmt.Println(string(bodyBytes))
 	}
