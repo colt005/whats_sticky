@@ -41,7 +41,10 @@ func NewClient() *HTTPClient {
 
 func GetSticker(localPath string) (localFilePath string) {
 
-	file, _ := os.Open(localPath)
+	file, err := os.Open(localPath)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer file.Close()
 
 	body := &bytes.Buffer{}
@@ -83,6 +86,6 @@ func GetSticker(localPath string) (localFilePath string) {
 	fmt.Println(newFile.Name())
 
 	localFilePath = filepath.Join(tmpPath, newFile.Name())
-	
+
 	return
 }
