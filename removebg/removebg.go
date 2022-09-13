@@ -85,7 +85,7 @@ func GetSticker(localPath string) (localFilePath string) {
 	}
 	fmt.Println(newFile.Name())
 
-	localFilePath = filepath.Join(tmpPath, newFile.Name())
+	localFilePath = tmpPath
 
 	return
 }
