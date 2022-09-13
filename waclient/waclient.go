@@ -116,13 +116,13 @@ func UploadSticker(webpPath string) (mediaId string, err error) {
 
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
+	_ = writer.WriteField("messaging_product", "whatsapp")
 	part, _ := writer.CreateFormFile("file", filepath.Base(file.Name()))
 	io.Copy(part, file)
 	writer.Close()
 
 	r, _ := http.NewRequest("POST", "https://graph.facebook.com/v13.0/"+config.Config("MOBILE_ID")+"/media", body)
 	r.Header.Add("Content-Type", writer.FormDataContentType())
-	r.Header.Add("messaging_product", "messaging_product")
 
 	resp, err := httpClient.client.Do(r)
 
