@@ -1,13 +1,18 @@
 package waclient
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
 
+	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
 	"github.com/google/uuid"
 )
@@ -97,6 +102,51 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 	} else {
 		fmt.Println(string(bodyBytes))
 	}
+
+	return
+}
+
+func UploadSticker(webpPath string) (mediaId string, err error) {
+
+	file, err := os.Open(webpPath)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer file.Close()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, _ := writer.CreateFormFile("file", filepath.Base(file.Name()))
+	io.Copy(part, file)
+	writer.Close()
+
+	r, _ := http.NewRequest("POST", "https://graph.facebook.com/v13.0/"+config.Config("MOBILE_ID")+"/media", body)
+	r.Header.Add("Content-Type", writer.FormDataContentType())
+	r.Header.Add("messaging_product", "messaging_product")
+
+	resp, err := httpClient.client.Do(r)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var result map[string]string
+
+	err = json.Unmarshal(b, &result)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(result["id"])
 
 	return
 }

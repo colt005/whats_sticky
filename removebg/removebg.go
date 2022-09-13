@@ -40,7 +40,6 @@ func NewClient() *HTTPClient {
 }
 
 func GetSticker(localPath string) (localFilePath string) {
-	fmt.Println("Trying to open", localPath)
 	file, err := os.Open(localPath)
 	if err != nil {
 		fmt.Println(err)

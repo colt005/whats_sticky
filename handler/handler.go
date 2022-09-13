@@ -67,6 +67,8 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	stickerPath := removebg.GetSticker(localPath)
 	fmt.Println(stickerPath)
 
+	waclient.UploadSticker(stickerPath)
+
 	return c.String(http.StatusOK, headerChallenge)
 }
 
