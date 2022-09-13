@@ -11,6 +11,7 @@ import (
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
+	"github.com/colt005/whats_sticky/removebg"
 	"github.com/colt005/whats_sticky/waclient"
 	"github.com/labstack/echo/v4"
 )
@@ -56,7 +57,15 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		fmt.Println(err)
 	}
 
-	waclient.DownloadMedia(*mediaResponse)
+	localPath, err := waclient.DownloadMedia(*mediaResponse)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	stickerPath := removebg.GetSticker(localPath)
+	fmt.Println(stickerPath)
+	
 	return c.String(http.StatusOK, headerChallenge)
 }
 
