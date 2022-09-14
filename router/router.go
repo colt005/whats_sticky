@@ -1,7 +1,7 @@
 package router
 
 import (
-	handler "github.com/colt005/whats_sticky/handler"
+	"github.com/colt005/whats_sticky/handler"
 	"github.com/labstack/echo/v4"
 )
 
