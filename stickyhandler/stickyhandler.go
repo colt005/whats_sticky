@@ -52,8 +52,10 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	mediaResponse, err := waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+	var mediaResponse *models.MediaResponse
+	if len(messageResponse.Entry) > 0 && len(messageResponse.Entry[0].Changes) > 0 && len(messageResponse.Entry[0].Changes[0].Value.Messages) > 0 {
+		mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+	}
 
 	if err != nil {
 		fmt.Println(err)
