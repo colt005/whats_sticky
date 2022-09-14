@@ -12,7 +12,6 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
@@ -109,22 +108,30 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 }
 
 func SendTextMessage(mobileNo string, message string) {
-	url := "https://graph.facebook.com/v14.0/" + config.Config("MOBILE_ID") + "/messages"
+	url := "https://graph.facebook.com/v13.0/" + config.Config("MOBILE_ID") + "/messages"
 	method := "POST"
 
-	payload := strings.NewReader(`{
-	  "messaging_product": "whatsapp",   
-	  "recipient_type": "individual",
-	  "to": "` + mobileNo + `",
-	  "type": "text",
-	  "text": {
-		  "preview_url": false,
-		  "body": "` + message + `"
-	  }
-  }`)
+	t := models.TextMessageRequest{
+		MessagingProduct: "whatsapp",
+		RecipientType:    "individual",
+		To:               mobileNo,
+		Type:             "text",
+		Text: models.Text{
+			PreviewURL: false,
+			Body:       message,
+		},
+	}
 
-	req, err := http.NewRequest(method, url, payload)
+	reqBody, err := json.Marshal(t)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
+	fmt.Println(string(reqBody))
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(reqBody))
+	req.Header.Add("Content-Type", "application/json")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -153,6 +160,7 @@ func SendStickerById(stickerId string, mobileNo string) (err error) {
 	s.MessagingProduct = "whatsapp"
 	s.RecipientType = "individual"
 	s.Type = "sticker"
+	s.To = mobileNo
 	s.Sticker.ID = stickerId
 
 	reqBody, err := json.Marshal(s)

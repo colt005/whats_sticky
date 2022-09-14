@@ -94,3 +94,26 @@ type StickerRequest struct {
 type Sticker struct {
 	ID string `json:"id"`
 }
+
+func UnmarshalTextMessageRequest(data []byte) (TextMessageRequest, error) {
+	var r TextMessageRequest
+	err := json.Unmarshal(data, &r)
+	return r, err
+}
+
+func (r *TextMessageRequest) MarshalTextMessageRequest() ([]byte, error) {
+	return json.Marshal(r)
+}
+
+type TextMessageRequest struct {
+	MessagingProduct string `json:"messaging_product"`
+	RecipientType    string `json:"recipient_type"`
+	To               string `json:"to"`
+	Type             string `json:"type"`
+	Text             Text   `json:"text"`
+}
+
+type Text struct {
+	PreviewURL bool   `json:"preview_url"`
+	Body       string `json:"body"`
+}

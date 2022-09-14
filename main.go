@@ -12,7 +12,6 @@ func main() {
 	app := echo.New()
 
 	router.SetupRoutes(app)
-
 	logrus.Fatal(app.Start(":" + config.Config("PORT")))
 
 }
