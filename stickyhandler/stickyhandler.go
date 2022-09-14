@@ -63,14 +63,18 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		fmt.Println(err)
 	}
 
+	var filesToRemove []string
+
 	localPath, err := waclient.DownloadMedia(*mediaResponse)
 	fmt.Println(localPath)
-
+	filesToRemove = append(filesToRemove, localPath)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	stickerPath := removebg.GetSticker(localPath)
+	filesToRemove = append(filesToRemove, stickerPath)
+
 	fmt.Println(stickerPath)
 
 	mediaId, err := waclient.UploadSticker(stickerPath)
@@ -82,6 +86,10 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	err = waclient.SendStickerById(mediaId)
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	for _, v := range filesToRemove {
+		os.Remove(v)
 	}
 
 	return c.String(http.StatusOK, headerChallenge)
