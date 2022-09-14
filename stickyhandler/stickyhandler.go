@@ -45,6 +45,8 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		fmt.Println(err)
 	}
 
+	fmt.Println(string(bodyBytes))
+
 	messageResponse, err := models.UnmarshalMessageResponse(bodyBytes)
 
 	if err != nil {
