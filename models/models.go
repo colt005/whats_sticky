@@ -72,3 +72,25 @@ type MediaResponse struct {
 	ID               string `json:"id"`
 	MessagingProduct string `json:"messaging_product"`
 }
+
+func (r *StickerRequest) MarshalStickerRequest() ([]byte, error) {
+	return json.Marshal(r)
+}
+
+func UnmarshalStickerRequest(data []byte) (StickerRequest, error) {
+	var r StickerRequest
+	err := json.Unmarshal(data, &r)
+	return r, err
+}
+
+type StickerRequest struct {
+	MessagingProduct string  `json:"messaging_product"`
+	RecipientType    string  `json:"recipient_type"`
+	To               string  `json:"to"`
+	Type             string  `json:"type"`
+	Sticker          Sticker `json:"sticker"`
+}
+
+type Sticker struct {
+	ID string `json:"id"`
+}

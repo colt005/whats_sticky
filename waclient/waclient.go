@@ -2,12 +2,14 @@ package waclient
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"os"
 	"path/filepath"
 
@@ -105,26 +107,88 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 	return
 }
 
+func SendStickerById(stickerId string) (err error) {
+
+	s := &models.StickerRequest{}
+
+
+	s.MessagingProduct = "whatsapp"
+	s.RecipientType = "individual"
+	s.To = "919483927247"
+	s.Type = "sticker"
+	s.Sticker.ID = stickerId
+
+	reqBody, err := json.Marshal(s)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	req, err := http.NewRequest("POST", "https://graph.facebook.com/v13.0/"+config.Config("MOBILE_ID")+"/messages", bytes.NewBuffer(reqBody))
+	req.Header.Add("Content-Type", "application/json")
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	resp, err := httpClient.Do(req)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("asdasdsad")
+	fmt.Println(string(bodyBytes))
+
+	defer resp.Body.Close()
+
+	return
+
+}
+
+func CreateImageFormFile(w *multipart.Writer, filename string) (io.Writer, error) {
+	h := make(textproto.MIMEHeader)
+	w.WriteField("messaging_product", "whatsapp")
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "file", filename))
+	h.Set("Content-Type", "image/webp")
+	return w.CreatePart(h)
+}
+
 func UploadSticker(webpPath string) (mediaId string, err error) {
 
-	file, err := os.Open(webpPath)
+	payload := &bytes.Buffer{}
+	writer := multipart.NewWriter(payload)
+	_ = writer.WriteField("messaging_product", "whatsapp")
+	file, errFile2 := os.Open(webpPath)
+	if errFile2 != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+	part2, errFile2 := CreateImageFormFile(writer, webpPath)
+	if errFile2 != nil {
+		fmt.Println(errFile2)
+		return
+	}
+	_, errFile2 = io.Copy(part2, file)
+	if errFile2 != nil {
+		fmt.Println(errFile2)
+		return
+	}
+	err = writer.Close()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	defer file.Close()
-
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-	_ = writer.WriteField("messaging_product", "whatsapp")
-	part, _ := writer.CreateFormFile("file", filepath.Base(file.Name()))
-	io.Copy(part, file)
-	writer.Close()
-
-	r, _ := http.NewRequest("POST", "https://graph.facebook.com/v13.0/"+config.Config("MOBILE_ID")+"/media", body)
+	r, _ := http.NewRequest("POST", "https://graph.facebook.com/v14.0/"+config.Config("MOBILE_ID")+"/media", payload)
 	r.Header.Add("Content-Type", writer.FormDataContentType())
 
-	resp, err := httpClient.client.Do(r)
+	resp, err := httpClient.Do(r)
 
 	if err != nil {
 		fmt.Println(err)
@@ -139,15 +203,18 @@ func UploadSticker(webpPath string) (mediaId string, err error) {
 
 	fmt.Println(string(b))
 
-	// var result map[string]string
+	if resp.StatusCode == http.StatusOK {
+		var result map[string]string
 
-	// err = json.Unmarshal(b, &result)
+		err = json.Unmarshal(b, &result)
 
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	// fmt.Println(result["id"])
+		fmt.Println(result["id"])
+		mediaId = result["id"]
+	}
 
 	return
 }
