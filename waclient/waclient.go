@@ -12,6 +12,7 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
@@ -107,14 +108,50 @@ func DownloadMedia(mediaResponse models.MediaResponse) (localPath string, err er
 	return
 }
 
-func SendStickerById(stickerId string) (err error) {
+func SendTextMessage(mobileNo string, message string) {
+	url := "https://graph.facebook.com/v14.0/" + config.Config("MOBILE_ID") + "/messages"
+	method := "POST"
+
+	payload := strings.NewReader(`{
+	  "messaging_product": "whatsapp",   
+	  "recipient_type": "individual",
+	  "to": "` + mobileNo + `",
+	  "type": "text",
+	  "text": {
+		  "preview_url": false,
+		  "body": "` + message + `"
+	  }
+  }`)
+
+	req, err := http.NewRequest(method, url, payload)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	resp, err := httpClient.Do(req)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(bodyBytes))
+
+}
+
+func SendStickerById(stickerId string, mobileNo string) (err error) {
 
 	s := &models.StickerRequest{}
 
-
 	s.MessagingProduct = "whatsapp"
 	s.RecipientType = "individual"
-	s.To = "919483927247"
 	s.Type = "sticker"
 	s.Sticker.ID = stickerId
 

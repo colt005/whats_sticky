@@ -53,43 +53,53 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		fmt.Println(err)
 	}
 	var mediaResponse *models.MediaResponse
-	if len(messageResponse.Entry) > 0 && len(messageResponse.Entry[0].Changes) > 0 && len(messageResponse.Entry[0].Changes[0].Value.Messages) > 0 && messageResponse.Entry[0].Changes[0].Value.Messages[0].Type == "image" {
-		mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
-	} else {
-		return
+	// if len(messageResponse.Entry) > 0 && len(messageResponse.Entry[0].Changes) > 0 && len(messageResponse.Entry[0].Changes[0].Value.Messages) > 0 && messageResponse.Entry[0].Changes[0].Value.Messages[0].Type == "image" {
+	// 	mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+	// } else {
+	// 	return
+	// }
+	for _, e := range messageResponse.Entry {
+		for _, c2 := range e.Changes {
+			for _, m := range c2.Value.Messages {
+				if m.Type == "image" {
+					waclient.SendTextMessage(m.From, "Please wait while I get my hands sticky and work on you sticker!")
+					mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+
+					var filesToRemove []string
+
+					localPath, err := waclient.DownloadMedia(*mediaResponse)
+					fmt.Println(localPath)
+					filesToRemove = append(filesToRemove, localPath)
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					stickerPath := removebg.GetSticker(localPath)
+					filesToRemove = append(filesToRemove, stickerPath)
+
+					fmt.Println(stickerPath)
+
+					mediaId, err := waclient.UploadSticker(stickerPath)
+
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					err = waclient.SendStickerById(mediaId, m.From)
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					for _, v := range filesToRemove {
+						os.Remove(v)
+					}
+				}
+			}
+		}
 	}
 
 	if err != nil {
 		fmt.Println(err)
-	}
-
-	var filesToRemove []string
-
-	localPath, err := waclient.DownloadMedia(*mediaResponse)
-	fmt.Println(localPath)
-	filesToRemove = append(filesToRemove, localPath)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	stickerPath := removebg.GetSticker(localPath)
-	filesToRemove = append(filesToRemove, stickerPath)
-
-	fmt.Println(stickerPath)
-
-	mediaId, err := waclient.UploadSticker(stickerPath)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = waclient.SendStickerById(mediaId)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	for _, v := range filesToRemove {
-		os.Remove(v)
 	}
 
 	return c.String(http.StatusOK, headerChallenge)
