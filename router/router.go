@@ -1,14 +1,14 @@
 package router
 
 import (
-	"github.com/colt005/whats_sticky/handler"
 	"github.com/labstack/echo/v4"
+	"github.com/colt005/whats_sticky/stickyhandler"
 )
 
 func SetupRoutes(app *echo.Echo) {
-	app.GET("/", handler.GetHome)
-	app.GET("/tmpfile", handler.GetTmpFile)
-	app.GET("/health", handler.GetHealth)
-	app.POST("/webhook", handler.HandleWhatsAppWebhook)
-	app.GET("/webhook", handler.HandleWhatsAppWebhookVerify)
+	app.GET("/", stickyhandler.GetHome)
+	app.GET("/tmpfile", stickyhandler.GetTmpFile)
+	app.GET("/health", stickyhandler.GetHealth)
+	app.POST("/webhook", stickyhandler.HandleWhatsAppWebhook)
+	app.GET("/webhook", stickyhandler.HandleWhatsAppWebhookVerify)
 }

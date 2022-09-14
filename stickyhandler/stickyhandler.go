@@ -1,4 +1,4 @@
-package handler
+package stickyhandler
 
 import (
 	"encoding/json"
