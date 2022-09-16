@@ -62,7 +62,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 		for _, c2 := range e.Changes {
 			for _, m := range c2.Value.Messages {
 				if m.Type == "image" {
-					waclient.SendTextMessage(m.From, "Please wait while I get my hands sticky and work on you sticker!")
+					waclient.SendTextMessage(m.From, "Please wait while I get my hands sticky and work on your sticker!")
 					mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
 
 					var filesToRemove []string
