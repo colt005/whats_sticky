@@ -73,7 +73,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 					}
 				}
 				if m.Type == "image" {
-					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \n Please wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
+					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \nPlease wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
 					mediaResponse, err = waclient.GetMediaUrl(m.ID)
 
 					var filesToRemove []string
@@ -107,7 +107,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 				} else if m.Type == "text" {
 					fmt.Println("Got a message")
 
-					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \n Please wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
+					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \nShoot me an image and I will reply with a sticker!", contact.Profile.Name))
 				}
 			}
 		}
