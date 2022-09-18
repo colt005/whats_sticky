@@ -12,6 +12,7 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/colt005/whats_sticky/config"
 	"github.com/colt005/whats_sticky/models"
@@ -289,4 +290,40 @@ func GetFirstContact(contacts []models.Contact) (contact *models.Contact, err er
 	}
 
 	return
+}
+
+func MarkMessageAsRead(messageId string) {
+	url := "https://graph.facebook.com/v14.0/" + config.Config("MOBILE_ID") + "/messages"
+	method := "PUT"
+
+	payload := strings.NewReader(`{
+	  "messaging_product": "whatsapp",
+	  "status": "read",
+	  "message_id": "` + messageId + `"
+  }`)
+
+	req, err := http.NewRequest(method, url, payload)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := httpClient.Do(req)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("asdasdsad")
+	fmt.Println(string(bodyBytes))
+
+	resp.Body.Close()
+
 }
