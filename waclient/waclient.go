@@ -293,7 +293,7 @@ func GetFirstContact(contacts []models.Contact) (contact *models.Contact, err er
 }
 
 func MarkMessageAsRead(messageId string) {
-	url := "https://graph.facebook.com/v14.0/" + config.Config("MOBILE_ID") + "/messages"
+	url := "https://graph.facebook.com/v13.0/" + config.Config("MOBILE_ID") + "/messages"
 	method := "PUT"
 
 	payload := strings.NewReader(`{
@@ -321,7 +321,6 @@ func MarkMessageAsRead(messageId string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("asdasdsad")
 	fmt.Println(string(bodyBytes))
 
 	resp.Body.Close()
