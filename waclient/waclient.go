@@ -294,7 +294,7 @@ func GetFirstContact(contacts []models.Contact) (contact *models.Contact, err er
 
 func MarkMessageAsRead(messageId string) {
 	url := "https://graph.facebook.com/v13.0/" + config.Config("MOBILE_ID") + "/messages"
-	method := "PUT"
+	method := "POST"
 
 	payload := strings.NewReader(`{
 	  "messaging_product": "whatsapp",
