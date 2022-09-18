@@ -61,9 +61,20 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 	for _, e := range messageResponse.Entry {
 		for _, c2 := range e.Changes {
 			for _, m := range c2.Value.Messages {
+				contact, contactErr := waclient.GetFirstContact(c2.Value.Contacts)
+				if contactErr != nil {
+					fmt.Println(err)
+					if err.Error() == waclient.NO_PROFILE_NAME {
+						contact = &models.Contact{
+							Profile: models.Profile{
+								Name: "User",
+							},
+						}
+					}
+				}
 				if m.Type == "image" {
-					waclient.SendTextMessage(m.From, "Please wait while I get my hands sticky and work on your sticker!")
-					mediaResponse, err = waclient.GetMediaUrl(messageResponse.Entry[0].Changes[0].Value.Messages[0].Image.ID)
+					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \n Please wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
+					mediaResponse, err = waclient.GetMediaUrl(m.ID)
 
 					var filesToRemove []string
 
@@ -93,6 +104,10 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 					for _, v := range filesToRemove {
 						os.Remove(v)
 					}
+				} else if m.Type == "text" {
+					fmt.Println("Got a message")
+
+					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \n Please wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
 				}
 			}
 		}

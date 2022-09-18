@@ -276,3 +276,17 @@ func getFileExtension(mimeType string) (extension string) {
 	}
 	return
 }
+
+func GetFirstContact(contacts []models.Contact) (contact *models.Contact, err error) {
+
+	for _, c := range contacts {
+		contact = &c
+		break
+	}
+
+	if contact.Profile.Name == "" {
+		return nil, errors.New(NO_PROFILE_NAME)
+	}
+
+	return
+}
