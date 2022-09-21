@@ -45,9 +45,16 @@ type Message struct {
 	Timestamp string `json:"timestamp"`
 	Type      string `json:"type"`
 	Image     Image  `json:"image"`
+	Video     Video  `json:"video"`
 }
 
 type Image struct {
+	MIMEType string `json:"mime_type"`
+	Sha256   string `json:"sha256"`
+	ID       string `json:"id"`
+}
+
+type Video struct {
 	MIMEType string `json:"mime_type"`
 	Sha256   string `json:"sha256"`
 	ID       string `json:"id"`

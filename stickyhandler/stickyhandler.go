@@ -110,7 +110,7 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 				} else if m.Type == "video" {
 					go waclient.MarkMessageAsRead(m.ID)
 					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \nPlease wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
-					mediaResponse, err = waclient.GetMediaUrl(m.Image.ID)
+					mediaResponse, err = waclient.GetMediaUrl(m.Video.ID)
 
 					var filesToRemove []string
 
