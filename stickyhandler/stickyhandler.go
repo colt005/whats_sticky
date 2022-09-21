@@ -107,6 +107,40 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 					for _, v := range filesToRemove {
 						os.Remove(v)
 					}
+				} else if m.Type == "video" {
+					go waclient.MarkMessageAsRead(m.ID)
+					waclient.SendTextMessage(m.From, fmt.Sprintf("Hi %s! \nPlease wait while I get my hands sticky and work on your sticker!", contact.Profile.Name))
+					mediaResponse, err = waclient.GetMediaUrl(m.Image.ID)
+
+					var filesToRemove []string
+
+					localPath, err := waclient.DownloadMedia(*mediaResponse)
+					fmt.Println(localPath)
+					filesToRemove = append(filesToRemove, localPath)
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					stickerPath := removebg.GetStickerFromVideo(localPath)
+					filesToRemove = append(filesToRemove, stickerPath)
+
+					fmt.Println(stickerPath)
+
+					mediaId, err := waclient.UploadSticker(stickerPath)
+
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					err = waclient.SendStickerById(mediaId, m.From)
+					if err != nil {
+						fmt.Println(err)
+					}
+
+					for _, v := range filesToRemove {
+						os.Remove(v)
+					}
+
 				} else if m.Type == "text" {
 					fmt.Println("Got a message")
 					fmt.Println(m.ID)
