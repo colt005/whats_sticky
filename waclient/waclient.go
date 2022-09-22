@@ -273,7 +273,8 @@ func getFileExtension(mimeType string) (extension string) {
 		return ".png"
 	case "image/webp":
 		return ".webp"
-
+	case "video/mp4":
+		return ".mp4"
 	}
 	return
 }
