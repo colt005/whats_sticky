@@ -38,7 +38,7 @@ func HandleWhatsAppWebhookVerify(c echo.Context) (err error) {
 
 func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
-	headerChallenge := c.QueryParams().Get("hub.challenge")
+	// headerChallenge := c.QueryParams().Get("hub.challenge")
 
 	bodyBytes, err := io.ReadAll(c.Request().Body)
 	if err != nil {
@@ -154,9 +154,10 @@ func HandleWhatsAppWebhook(c echo.Context) (err error) {
 
 	if err != nil {
 		fmt.Println(err)
+		return c.NoContent(http.StatusOK)
 	}
 
-	return c.String(http.StatusOK, headerChallenge)
+	return c.NoContent(http.StatusOK)
 }
 
 func GetHome(c echo.Context) (err error) {
