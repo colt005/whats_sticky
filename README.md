@@ -18,6 +18,11 @@
 ## About The Project
 When you're tired of sending the same old text-based messages, share your most important moments with friends and family in a whole new way. WhatsSticky is a bot that converts any photo you send it into a sticker that can be shared on WhatsApp. WhatsSticky has a simple and intuitive interface. Just select an image from your phone, send it to the Bot and voila! You have an awesome whatsapp sticker ready to share with your friends.
 
+> - Your personal stickers come to life. With Whats Sticky, turn that cute photo of your pet into a genuine sticker and share it within your chat.
+> - Automatically converts your picture to a Whatsapp sticker that is sent as a new message.
+> - No need for editing the picture, just take it and the bot does the job for you.
+> - Fits any shape of video, photo or text of any size.
+
 The following graphic depicts the general architecture of the project. 
 
 <img src="images/WS_arch.png" alt="WS_arch">
