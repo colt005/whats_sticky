@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/colt005/whats_sticky/config"
 	"github.com/google/uuid"
 )
 
@@ -55,6 +56,7 @@ func GetSticker(localPath string) (localFilePath string) {
 
 	r, _ := http.NewRequest("POST", "https://removeg.kudla.live/api/remove-bg", body)
 	r.Header.Add("Content-Type", writer.FormDataContentType())
+	r.Header.Add("X-Api-Key", config.Config("REMOVEG_API_KEY"))
 
 	resp, err := httpClient.client.Do(r)
 
@@ -106,6 +108,7 @@ func GetStickerFromVideo(localPath string) (localFilePath string) {
 
 	r, _ := http.NewRequest("POST", "https://removeg.kudla.live/api/mp4-webp", body)
 	r.Header.Add("Content-Type", writer.FormDataContentType())
+	r.Header.Add("X-Api-Key", config.Config("REMOVEG_API_KEY"))
 
 	resp, err := httpClient.client.Do(r)
 
