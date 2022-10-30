@@ -1,6 +1,9 @@
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 func UnmarshalMessageResponse(data []byte) (MessageResponse, error) {
 	var r MessageResponse
@@ -123,4 +126,13 @@ type TextMessageRequest struct {
 type Text struct {
 	PreviewURL bool   `json:"preview_url"`
 	Body       string `json:"body"`
+}
+
+type CurrentUser struct {
+	MobileNo      string    `json:"mobile_no"`
+	UserName      string    `json:"user_name"`
+	PreviousState string    `json:"previous_state"`
+	CurrentState  string    `json:"current_state"`
+	Data          string    `json:"data"`
+	LastUpdated   time.Time `json:"last_updated"`
 }

@@ -3,3 +3,4 @@ handler/handler.go
 1.webp
 whatssticky
 build.sh
+database.db
